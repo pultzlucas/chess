@@ -1,6 +1,6 @@
-# chess
+# Chess Game
 Chess game developed using Javascript Vanilla
-
+```
                                                        .::.
                                             _()_       _::_
                                   _O      _/____\_   _/____\_
@@ -13,3 +13,4 @@ Chess game developed using Javascript Vanilla
   _|_|_    |___|_|   _|____|_   (_____)   (______)   (______)
  (_____)  (_______) (________) (_______) (________) (________)
  /_____\  /_______\ /________\ /_______\ /________\ /________\
+ 
