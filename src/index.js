@@ -2,7 +2,7 @@ import ChessGame from "./ChessGame.js"
 
 document.addEventListener('DOMContentLoaded', () => {
     const chessGame = new ChessGame()
-    chessGame.renderChessBoard()
+    chessGame.board.render()
     chessGame.startGame()
 
     document.querySelectorAll('.piece-case').forEach(pieceCase => {

@@ -10,7 +10,6 @@
     width: var(--case-size);
     height: var(--case-size);
     background-color: var(--case-bg-color);
-    /* transition: .2s; */
     cursor: pointer;
     display: flex;
     justify-content: center;
