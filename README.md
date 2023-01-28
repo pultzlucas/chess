@@ -1,5 +1,6 @@
 # Chess Game
 Chess game developed using Javascript Vanilla 
+```
                                                    _:_
                                                   '-.-'
                                          ()      __.'.__
