@@ -1,5 +1,8 @@
 # Chess Game
 Chess game developed using Javascript Vanilla 
+
+[PLAY](https://pultzlucas.github.io/chess/)
+
 ```
                                                    _:_
                                                   '-.-'
