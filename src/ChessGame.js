@@ -1,10 +1,12 @@
 import Board from "./Board.js"
+import King from "./chess_pieces/King.js"
+import Queen from "./chess_pieces/Queen.js"
 import Player from "./models/Player.js"
 
 export default class ChessGame {
     constructor() {
         this.rounds = 0
-        this.board = new Board(700)
+        this.board = new Board(800)
         this.playerB = new Player(0)
         this.playerW = new Player(1)
         this.playerMoving = null
@@ -14,6 +16,11 @@ export default class ChessGame {
         this.playerMoving = this.playerW
         this.updatePlayerMovingPanel()
         this.board.placePiecesAtInitialPosition()
+
+        // this.board.appendPiece(new King(4, 7, 1))
+        // this.board.appendPiece(new King(4, 0, 0))
+        // this.board.appendPiece(new Queen(3, 7, 1))
+        // this.board.appendPiece(new Queen(3, 6, 1))
     }
 
     updatePlayerMovingPanel() {

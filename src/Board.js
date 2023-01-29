@@ -36,7 +36,7 @@ export default class Board {
                 const caseSize = this.size / 8
 
                 const pieceCaseEl = document.createElement('div')
-                pieceCaseEl.classList.add('piece-case')
+                pieceCaseEl.classList.add('piece-case', 'actived')
                 pieceCaseEl.setAttribute('x', x)
                 pieceCaseEl.setAttribute('y', y)
                 pieceCaseEl.style.setProperty('--case-bg-color', caseColor)
@@ -81,7 +81,7 @@ export default class Board {
 
     blockCases() {
         this.boardElement.querySelectorAll('.piece-case').forEach(pieceCase => {
-            pieceCase.classList.add('blocked')
+            pieceCase.classList.remove('actived')
         })
     }
 
