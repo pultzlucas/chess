@@ -1,10 +1,10 @@
-import Bishop from "../chess_pieces/Bishop.js"
-import Horse from "../chess_pieces/Horse.js"
-import King from "../chess_pieces/King.js"
-import Pawn from "../chess_pieces/Pawn.js"
-import Queen from "../chess_pieces/Queen.js"
-import Rook from "../chess_pieces/Rook.js"
-import PieceCase from "./PieceCase.js"
+import Bishop from "./chess_pieces/Bishop.js"
+import Horse from "./chess_pieces/Horse.js"
+import King from "./chess_pieces/King.js"
+import Pawn from "./chess_pieces/Pawn.js"
+import Queen from "./chess_pieces/Queen.js"
+import Rook from "./chess_pieces/Rook.js"
+import PieceCase from "./models/PieceCase.js"
 
 export default class Board {
     constructor(size) {
@@ -55,7 +55,7 @@ export default class Board {
     }
 
     showPossibleMoveCases(gameState, piece) {
-        const movements = piece.getMovementPossibilities(piece, gameState)
+        const movements = piece.getMovementPossibilities(gameState)
         movements.forEach(({ x, y }) => {
             const mvCase = this.getPieceCaseElement(x, y)
             const piece = this.getPieceFromCaseCordenates(x, y)
@@ -76,6 +76,12 @@ export default class Board {
 
                 mvCase.appendChild(bgColor)
             }
+        })
+    }
+
+    blockCases() {
+        this.boardElement.querySelectorAll('.piece-case').forEach(pieceCase => {
+            pieceCase.classList.add('blocked')
         })
     }
 

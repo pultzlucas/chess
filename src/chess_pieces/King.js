@@ -5,7 +5,7 @@ export default class King extends ChessPiece {
         super(0, x, y, color)
     }
 
-    getMovementPossibilities(piece, { board }) {
+    getMovementPossibilities({ board }) {
         return [
             { x: this.x - 1, y: this.y }, // left
             { x: this.x + 1, y: this.y }, // right
@@ -18,7 +18,7 @@ export default class King extends ChessPiece {
         ]
         .filter(({ x, y }) => {
             const otherPiece = board.getPieceFromCaseCordenates(x, y)
-            if(otherPiece && piece.color !== otherPiece.color) return true
+            if(otherPiece && this.color !== otherPiece.color) return true
             return !otherPiece
         })
     }

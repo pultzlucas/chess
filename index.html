@@ -8,7 +8,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="chess-board"></div>
+    <div class="container">
+        
+        <div class="player-moving-panel">
+            <span>Player</span>
+            <span class="player-moving"></span>
+        </div>
+        <div class="chess-board"></div>
+
+        
+        <div class="check-match-message hidden">
+            <h2>Check Match</h2>
+            <div class="winner-message">
+                <span>Player </span>
+                <span class="player-winner">white</span>
+                <span> wins</span>
+            </div>
+            <button onclick="location.reload()">Restart</button>
+        </div>
+        
+        <div class="background-shadow hidden"></div>
+    </div>
     <script src="./src/index.js" type="module"></script>
 </body>
 </html>

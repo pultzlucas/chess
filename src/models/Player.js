@@ -5,6 +5,10 @@ export default class Player {
         this.selectedPiece = null
     }
 
+    getName() {
+        return this.color === 0 ? 'black' : 'white'
+    }
+
     selectPiece(piece) {
         this.selectedPiece = piece
     }
@@ -29,5 +33,7 @@ export default class Player {
     removePiece(board, { x, y }) {
         board.pieceCases[y][x].piece = null
         board.getPieceCaseElement(x, y).firstChild.remove()
+
+        board.piecesAtBoard.splice(board.piecesAtBoard.findIndex(piece => piece.x === x && piece.y === y), 1)
     }
 }
