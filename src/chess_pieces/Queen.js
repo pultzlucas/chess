@@ -1,61 +1,130 @@
 import ChessPiece from "../models/ChessPiece.js";
 
 export default class Queen extends ChessPiece {
-    constructor(x, y, color) {
-        super(1, x, y, color)
+    constructor(x, y, team) {
+        super(1, x, y, team)
     }
 
-    getMovementPossibilities({ board }) {
-        const rightMoves = this.getPossibilitiesLoop(this.color, {
+    getKillPossibilities({ board }) {
+        const rightKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: 7 - this.x,
             xFunc: i => i + this.x + 1,
             yFunc: _ => this.y
         })
 
-        const leftMoves = this.getPossibilitiesLoop(this.color, {
+        const leftKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: this.x,
             xFunc: i => this.x - i - 1,
             yFunc: _ => this.y
         })
 
-        const bottomMoves = this.getPossibilitiesLoop(this.color, {
+        const bottomKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: 7 - this.y,
             xFunc: _ => this.x,
             yFunc: i => i + this.y + 1
         })
 
-        const topMoves = this.getPossibilitiesLoop(this.color, {
+        const topKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: this.y,
             xFunc: _ => this.x,
             yFunc: i => this.y - i - 1
         })
 
-        const rightBottomMoves = this.getPossibilitiesLoop(this.color, {
+        const rightBottomKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: 7 - this.x,
             xFunc: i => i + this.x + 1,
             yFunc: i => i + this.y + 1
         })
 
-        const leftBottomMoves = this.getPossibilitiesLoop(this.color, {
+        const leftBottomKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: this.x,
             xFunc: i => this.x - i - 1,
             yFunc: i => this.y + i + 1
         })
 
-        const rightTopMoves = this.getPossibilitiesLoop(this.color, {
+        const rightTopKills = this.getKillPossibilitiesLoop(this.team, {
             board,
             cases: 7 - this.x,
             xFunc: i => i + this.x + 1,
             yFunc: i => this.y - i - 1
         })
 
-        const leftTopMoves = this.getPossibilitiesLoop(this.color, {
+        const leftTopKills = this.getKillPossibilitiesLoop(this.team, {
+            board,
+            cases: this.y,
+            xFunc: i => this.x - i - 1,
+            yFunc: i => this.y - i - 1
+        })
+
+        return [
+            rightKills,
+            leftKills,
+            bottomKills,
+            topKills,
+            rightBottomKills,
+            leftBottomKills,
+            rightTopKills,
+            leftTopKills
+        ].filter(kill => kill)
+    }
+
+    getMovementPossibilities({ board }) {
+        const rightMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: 7 - this.x,
+            xFunc: i => i + this.x + 1,
+            yFunc: _ => this.y
+        })
+
+        const leftMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: this.x,
+            xFunc: i => this.x - i - 1,
+            yFunc: _ => this.y
+        })
+
+        const bottomMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: 7 - this.y,
+            xFunc: _ => this.x,
+            yFunc: i => i + this.y + 1
+        })
+
+        const topMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: this.y,
+            xFunc: _ => this.x,
+            yFunc: i => this.y - i - 1
+        })
+
+        const rightBottomMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: 7 - this.x,
+            xFunc: i => i + this.x + 1,
+            yFunc: i => i + this.y + 1
+        })
+
+        const leftBottomMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: this.x,
+            xFunc: i => this.x - i - 1,
+            yFunc: i => this.y + i + 1
+        })
+
+        const rightTopMoves = this.getMovementPossibilitiesLoop(this.team, {
+            board,
+            cases: 7 - this.x,
+            xFunc: i => i + this.x + 1,
+            yFunc: i => this.y - i - 1
+        })
+
+        const leftTopMoves = this.getMovementPossibilitiesLoop(this.team, {
             board,
             cases: this.y,
             xFunc: i => this.x - i - 1,

@@ -4,7 +4,9 @@ import King from "./chess_pieces/King.js"
 import Pawn from "./chess_pieces/Pawn.js"
 import Queen from "./chess_pieces/Queen.js"
 import Rook from "./chess_pieces/Rook.js"
+import Lady from "./chess_pieces/Lady.js"
 import PieceCase from "./models/PieceCase.js"
+import Archer from "./chess_pieces/Archer.js"
 
 export default class Board {
     constructor(size) {
@@ -19,13 +21,14 @@ export default class Board {
             .map((_, y) => {
                 return new Array(8).fill(null).map((_, x) => {
                     let pieceCaseType = 0
-                    // x and y is even
                     if (x % 2 === 0 && y % 2 == 0) pieceCaseType = 1
-                    // x and y is odd
                     if (x % 2 !== 0 && y % 2 !== 0) pieceCaseType = 1
                     return new PieceCase(x, y, pieceCaseType)
                 })
             })
+
+        document.querySelector('body').style.setProperty('--board-size', `${this.size}px`)
+        document.querySelector('body').style.setProperty('--case-size', `${this.size / 8}px`)
     }
 
     render() {
@@ -40,7 +43,6 @@ export default class Board {
                 pieceCaseEl.setAttribute('x', x)
                 pieceCaseEl.setAttribute('y', y)
                 pieceCaseEl.style.setProperty('--case-bg-color', caseColor)
-                pieceCaseEl.style.setProperty('--case-size', `${caseSize}px`)
                 pieceCaseEl.style.left = `${x * caseSize}px`
                 pieceCaseEl.style.top = `${y * caseSize}px`
 
@@ -55,28 +57,17 @@ export default class Board {
     }
 
     showPossibleMoveCases(gameState, piece) {
-        const movements = piece.getMovementPossibilities(gameState)
-        movements.forEach(({ x, y }) => {
+        const addMarkToPositionCase = ({ x, y }, mark) => {
             const mvCase = this.getPieceCaseElement(x, y)
-            const piece = this.getPieceFromCaseCordenates(x, y)
             if (mvCase) {
-                const bgColor = document.createElement('div')              
-                bgColor.classList.add('piece-case-mark')
-                
-                if(piece) {
-                    const pieceIsKing = piece.id === 0
-                    if(pieceIsKing) {
-                        bgColor.classList.add('check')
-                    } else {
-                        bgColor.classList.add('kill')
-                    }
-                } else {
-                    bgColor.classList.add('move')
-                }
-
+                const bgColor = document.createElement('div')
+                bgColor.classList.add('piece-case-mark', mark)
                 mvCase.appendChild(bgColor)
             }
-        })
+        }
+
+        piece.getMovementPossibilities(gameState).forEach(pos => addMarkToPositionCase(pos, 'move'))
+        piece.getKillPossibilities(gameState).forEach(pos => addMarkToPositionCase(pos, 'kill'))
     }
 
     blockCases() {
@@ -87,16 +78,19 @@ export default class Board {
 
     appendPiece(piece) {
         this.piecesAtBoard.push(piece)
-
-        if (this.pieceCases.length > 0) {
-            this.pieceCases[piece.y][piece.x].piece = piece
-        }
-
+        this.pieceCases[piece.y][piece.x].piece = piece
+        
         const pieceCaseEl = this.getPieceCaseElement(piece.x, piece.y)
         const img = document.createElement('img')
         img.classList.add('piece-img')
-        img.src = `./src/assets/${piece.id}-${piece.color}.png`
+        img.src = `./src/assets/${piece.id}-${piece.team}.png`
         pieceCaseEl.appendChild(img)
+    }
+
+    removePiece({ x, y }) {
+        this.pieceCases[y][x].piece = null
+        this.getPieceCaseElement(x, y).firstChild.remove()
+        this.piecesAtBoard.splice(this.piecesAtBoard.findIndex(piece => piece.x === x && piece.y === y), 'white')
     }
 
     getPieceCaseElement(x, y) {
@@ -112,40 +106,42 @@ export default class Board {
     }
 
     placePiecesAtInitialPosition() {
-        // Black team
-        this.appendPiece(new Pawn(0, 1, 0))
-        this.appendPiece(new Pawn(1, 1, 0))
-        this.appendPiece(new Pawn(2, 1, 0))
-        this.appendPiece(new Pawn(3, 1, 0))
-        this.appendPiece(new Pawn(4, 1, 0))
-        this.appendPiece(new Pawn(5, 1, 0))
-        this.appendPiece(new Pawn(6, 1, 0))
-        this.appendPiece(new Pawn(7, 1, 0))
-        this.appendPiece(new Rook(0, 0, 0))
-        this.appendPiece(new Rook(7, 0, 0))
-        this.appendPiece(new Bishop(2, 0, 0))
-        this.appendPiece(new Bishop(5, 0, 0))
-        this.appendPiece(new Horse(1, 0, 0))
-        this.appendPiece(new Horse(6, 0, 0))
-        this.appendPiece(new King(3, 0, 0))
-        this.appendPiece(new Queen(4, 0, 0))
-        
-        // White team
-        this.appendPiece(new Pawn(0, 6, 1))
-        this.appendPiece(new Pawn(1, 6, 1))
-        this.appendPiece(new Pawn(2, 6, 1))
-        this.appendPiece(new Pawn(3, 6, 1))
-        this.appendPiece(new Pawn(4, 6, 1))
-        this.appendPiece(new Pawn(5, 6, 1))
-        this.appendPiece(new Pawn(6, 6, 1))
-        this.appendPiece(new Pawn(7, 6, 1))
-        this.appendPiece(new Rook(0, 7, 1))
-        this.appendPiece(new Rook(7, 7, 1))
-        this.appendPiece(new Bishop(2, 7, 1))
-        this.appendPiece(new Bishop(5, 7, 1))
-        this.appendPiece(new Horse(1, 7, 1))
-        this.appendPiece(new Horse(6, 7, 1))
-        this.appendPiece(new King(4, 7, 1))
-        this.appendPiece(new Queen(3, 7, 1))
+        [
+            // Black team
+            new Pawn(0, 1, 0),
+            new Pawn(1, 1, 0),
+            new Lady(2, 1, 0),
+            new Pawn(3, 1, 0),
+            new Archer(4, 1, 0),
+            new Lady(5, 1, 0),
+            new Pawn(6, 1, 0),
+            new Pawn(7, 1, 0),
+            new Rook(0, 0, 0),
+            new Rook(7, 0, 0),
+            new Bishop(2, 0, 0),
+            new Bishop(5, 0, 0),
+            new Horse(1, 0, 0),
+            new Horse(6, 0, 0),
+            new King(3, 0, 0),
+            new Queen(4, 0, 0),
+            // White team
+            new Pawn(0, 6, 1),
+            new Pawn(1, 6, 1),
+            new Lady(2, 6, 1),
+            new Pawn(3, 6, 1),
+            new Archer(4, 6, 1),
+            new Lady(5, 6, 1),
+            new Pawn(6, 6, 1),
+            new Pawn(7, 6, 1),
+            new Rook(0, 7, 1),
+            new Rook(7, 7, 1),
+            new Bishop(2, 7, 1),
+            new Bishop(5, 7, 1),
+            new Horse(1, 7, 1),
+            new Horse(6, 7, 1),
+            new King(4, 7, 1),
+            new Queen(3, 7, 1)
+        ]
+            .forEach(piece => this.appendPiece(piece))
     }
 }

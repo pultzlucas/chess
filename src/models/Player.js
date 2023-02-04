@@ -1,39 +1,37 @@
+import Graveyard from "./Graveyard.js"
+
 export default class Player {
-    constructor(color) {
-        this.color = color
+    constructor(team) {
+        this.team = team
         this.moves = 0
         this.selectedPiece = null
+        this.graveyard = new Graveyard(team)
     }
 
     getName() {
-        return this.color === 0 ? 'black' : 'white'
+        return this.team === 0 ? 'black' : 'white'
     }
 
     selectPiece(piece) {
         this.selectedPiece = piece
     }
 
+    killEnemyPiece(board, { x, y }) {
+        const pieceToKill = board.getPieceFromCaseCordenates(x, y)
+        this.graveyard.appendPiece(pieceToKill)
+        const positionAfterKill = this.selectedPiece.getPositionAfterKill(this.selectedPiece, x, y)
+        board.removePiece(pieceToKill)
+        this.moveSelectedPieceTo(board, positionAfterKill.x, positionAfterKill.y)
+    }
+
     moveSelectedPieceTo(board, x, y) {
-        this.removePiece(board, this.selectedPiece)
-        
-        // If has enemy piece on case, removes it
-        if(board.getPieceFromCaseCordenates(x, y)) {
-            this.removePiece(board, board.getPieceFromCaseCordenates(x, y))
-        }
+        board.removePiece(this.selectedPiece)
 
         this.selectedPiece.x = x
         this.selectedPiece.y = y
+
         this.selectedPiece.moves++
-
         board.appendPiece(this.selectedPiece)
-
         this.moves++
-    }
-
-    removePiece(board, { x, y }) {
-        board.pieceCases[y][x].piece = null
-        board.getPieceCaseElement(x, y).firstChild.remove()
-
-        board.piecesAtBoard.splice(board.piecesAtBoard.findIndex(piece => piece.x === x && piece.y === y), 1)
     }
 }
