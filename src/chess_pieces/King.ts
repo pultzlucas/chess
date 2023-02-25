@@ -1,11 +1,13 @@
+import ChessGame from "../ChessGame.js";
 import ChessPiece from "../models/ChessPiece.js";
+import Movement from "../models/Position.js";
 
 export default class King extends ChessPiece {
-    constructor(x, y, team) {
+    constructor(x: number, y: number, team: number) {
         super(0, x, y, team)
     }
 
-    getKillPossibilities({ board }) {
+    getKillPossibilities({ board }: ChessGame) {
         return [
             { x: this.x - 1, y: this.y }, // left
             { x: this.x + 1, y: this.y }, // right
@@ -18,11 +20,11 @@ export default class King extends ChessPiece {
         ]
             .filter(({ x, y }) => {
                 const otherPiece = board.getPieceFromCaseCordenates(x, y)
-                return board.getPieceFromCaseCordenates(x, y) && this.team !== otherPiece.team
+                if(otherPiece) return board.getPieceFromCaseCordenates(x, y) && this.team !== otherPiece.team
             })
     }
 
-    getMovementPossibilities({ board }) {
+    getMovementPossibilities({ board }: ChessGame) {
         return [
             { x: this.x - 1, y: this.y }, // left
             { x: this.x + 1, y: this.y }, // right
@@ -33,6 +35,6 @@ export default class King extends ChessPiece {
             { x: this.x - 1, y: this.y - 1 }, // bottom left
             { x: this.x + 1, y: this.y + 1 }, // bottom right
         ]
-            .filter(({ x, y }) => !board.getPieceFromCaseCordenates(x, y))
+            .filter(({ x, y }) => !board.getPieceFromCaseCordenates(x, y)) as Movement[]
     }
 }

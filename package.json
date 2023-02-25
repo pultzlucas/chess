@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "tsc && rm -rf dist/assets && cp -r src/assets dist/assets"
+  },
+  "dependencies": {
+    "typescript": "^4.9.5"
+  }
+}

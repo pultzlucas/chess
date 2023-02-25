@@ -1,11 +1,12 @@
+import ChessGame from "../ChessGame.js";
 import ChessPiece from "../models/ChessPiece.js";
 
 export default class Horse extends ChessPiece {
-    constructor(x, y, team) {
+    constructor(x: number, y: number, team: number) {
         super(3, x, y, team)
     }
 
-    getKillPossibilities({ board }) {
+    getKillPossibilities({ board }: ChessGame) {
         return [
             { x: this.x - 2, y: this.y - 1 },
             { x: this.x - 2, y: this.y + 1 },
@@ -21,11 +22,11 @@ export default class Horse extends ChessPiece {
         ]
             .filter(({ x, y }) => {
                 const otherPiece = board.getPieceFromCaseCordenates(x, y)
-                return board.getPieceFromCaseCordenates(x, y) && this.team !== otherPiece.team
+                if(otherPiece) return board.getPieceFromCaseCordenates(x, y) && this.team !== otherPiece.team
             })
     }
 
-    getMovementPossibilities({ board }) {
+    getMovementPossibilities({ board }: ChessGame) {
         return [
             { x: this.x - 2, y: this.y - 1 },
             { x: this.x - 2, y: this.y + 1 },

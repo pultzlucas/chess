@@ -6,18 +6,37 @@
 // 5 = pawn
 // 6 = lady
 // 7 = archer
+// 8 = death
+
+import Board from "../Board.js"
+import ChessGame from "../ChessGame.js"
+import Position from "../models/Position.js"
 
 export default class ChessPiece {
-    constructor(id, x, y, team) {
+    team: number
+    id: number
+    x: number
+    y: number
+    alive: boolean
+    moves: number
+    specialModeIsActived: boolean
+
+    constructor(id: number, x: number, y: number, team: number) {
         this.id = id
         this.team = team
         this.x = x
         this.y = y
         this.alive = true
         this.moves = 0
+        this.specialModeIsActived = false
     }
 
-    getKillPossibilitiesLoop(team, { board, cases, xFunc, yFunc }) {
+    getKillPossibilitiesLoop(team: number, { board, cases, xFunc, yFunc }: {
+        board: Board
+        cases: number,
+        xFunc: Function
+        yFunc: Function
+    }) {
         for (let i in new Array(cases).fill(null)) {
             const cord = {
                 x: xFunc(Number(i)),
@@ -32,7 +51,12 @@ export default class ChessPiece {
         }
     }
 
-    getMovementPossibilitiesLoop(team, { board, cases, xFunc, yFunc }) {
+    getMovementPossibilitiesLoop(team: number, { board, cases, xFunc, yFunc }: {
+        board: Board
+        cases: number,
+        xFunc: Function
+        yFunc: Function
+    }) {
         let moves = []
         for (let i in new Array(cases).fill(null)) {
             const cord = {
@@ -48,15 +72,17 @@ export default class ChessPiece {
         return moves
     }
 
-    getKillPossibilities() {
+    getKillPossibilities(game: ChessGame): Position[] {
         return []
     }
 
-    getMovementsPossibilties() {
+    getMovementPossibilities(game: ChessGame): Position[] {
         return []
     }
 
-    getPositionAfterKill(piece, killX, killY) {
+    getPositionAfterKill(piece: ChessPiece, killX: number, killY: number): Position {
         return { x: killX, y: killY }
     }
+
+    activeSpecialMode(game: ChessGame) {}
 }

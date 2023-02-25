@@ -1,11 +1,17 @@
+import ChessGame from "../ChessGame.js";
 import ChessPiece from "../models/ChessPiece.js";
+import Position from '../models/Position.js'
 
 export default class Pawn extends ChessPiece {
-    constructor(x, y, team) {
+    constructor(x: number, y: number, team: number) {
         super(5, x, y, team)
     }
 
-    getKillPossibilities({ board }) {
+    activeSpecialMode({ board }: ChessGame) {
+        
+    }
+
+    getKillPossibilities({ board }: ChessGame) {
         let kills = []
 
         if (this.team === 0) {
@@ -37,7 +43,7 @@ export default class Pawn extends ChessPiece {
         return kills
     }
 
-    getMovementPossibilities({ board }) {
+    getMovementPossibilities({ board }: ChessGame) {
         const movements = () => {
             if (this.team === 0) {
                 if (this.moves === 0) {
@@ -54,8 +60,10 @@ export default class Pawn extends ChessPiece {
 
                 return [{ x: this.x, y: this.y - 1 }]
             }
+
+            return []
         }
 
-        return movements().filter(({ x, y }) => !board.getPieceFromCaseCordenates(x, y))
+        return movements().filter(({ x, y }) => !board.getPieceFromCaseCordenates(x, y)) as Position[]
     }
 }

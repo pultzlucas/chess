@@ -1,11 +1,13 @@
+import ChessGame from "../ChessGame.js";
 import ChessPiece from "../models/ChessPiece.js";
+import Movement from "../models/Position.js";
 
 export default class Archer extends ChessPiece {
-    constructor(x, y, team) {
+    constructor(x: number, y: number, team: number) {
         super(7, x, y, team)
     }
 
-    getKillPossibilities({ board }) {
+    getKillPossibilities({ board }: ChessGame): Movement[] {
         return [
             { x: this.x + 2, y: this.team === 0 ? this.y + 3 : this.y - 3 }, // right
             { x: this.x - 2, y: this.team === 0 ? this.y + 3 : this.y - 3 }, // left
@@ -18,7 +20,7 @@ export default class Archer extends ChessPiece {
             })
     }
 
-    getMovementPossibilities({ board }) {
+    getMovementPossibilities({ board }: ChessGame) {
         return [
             { x: this.x - 1, y: this.y }, // left
             { x: this.x + 1, y: this.y }, // right
@@ -28,7 +30,7 @@ export default class Archer extends ChessPiece {
             .filter(({ x, y }) => !board.getPieceFromCaseCordenates(x, y))
     }
 
-    getPositionAfterKill(piece) {
+    getPositionAfterKill(piece: ChessPiece, x: number, y: number) {
         return { x: piece.x, y: piece.y }
     }
 }
