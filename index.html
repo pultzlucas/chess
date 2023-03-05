@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="./assets/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+    <main class="container">
+
+        <section class="player-moving-panel">
+            <span>Player</span>
+            <span class="player-moving"></span>
+        </section>
+
+        <div class="game-area">
+            <section class="chess-board"></section>
+        </div>
+
+        <section class="check-match-message hidden">
+            <h2>Check Match</h2>
+            <div class="winner-message">
+                <span>Player </span>
+                <span class="player-winner">white</span>
+                <span> wins</span>
+            </div>
+            <button onclick="location.reload()">Restart</button>
+        </section>
+
+        <div class="background-shadow hidden"></div>
+    </main>
+    <script src="./dist/index.js" type="module"></script>
+</body>
+
+</html>

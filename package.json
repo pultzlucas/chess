@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d ./",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  }
+}
