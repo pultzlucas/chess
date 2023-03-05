@@ -8,6 +8,8 @@ document.querySelectorAll('.piece-case').forEach(pieceCase => {
     pieceCase.addEventListener('click', clickOverChessCase)
 })
 
+console.log(location.hostname)
+
 export function clickOverChessCase(e: Event) {
     const target = e.target as Element
     let caseElement = target.classList.contains('piece-case') ? target : target.parentNode as Element
