@@ -5,6 +5,7 @@ chessGame.startGame();
 document.querySelectorAll('.piece-case').forEach(pieceCase => {
     pieceCase.addEventListener('click', clickOverChessCase);
 });
+console.log(location.href);
 export function clickOverChessCase(e) {
     const target = e.target;
     let caseElement = target.classList.contains('piece-case') ? target : target.parentNode;
