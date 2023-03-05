@@ -1,5 +1,5 @@
 # Chess Game
-Chess game developed using Javascript Vanilla 
+Chess game with new pieces
 
 [PLAY](https://pultzlucas.github.io/chess/)
 
