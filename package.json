@@ -1,7 +1,7 @@
 {
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d ./ --remove ./node_modules",
+    "deploy": "gh-pages -d ./",
     "build": "tsc"
   },
   "dependencies": {
