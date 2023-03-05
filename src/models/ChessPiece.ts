@@ -20,6 +20,9 @@ export default class ChessPiece {
     alive: boolean
     moves: number
     specialModeIsActived: boolean
+    timesActivedSpecial: number
+    timesPermitedToActiveSpecial: number
+    graveyardId: number | null
 
     constructor(id: number, x: number, y: number, team: number) {
         this.id = id
@@ -28,7 +31,19 @@ export default class ChessPiece {
         this.y = y
         this.alive = true
         this.moves = 0
+        this.timesActivedSpecial = 0
+        this.timesPermitedToActiveSpecial = 0
         this.specialModeIsActived = false
+        this.graveyardId = null
+    }
+
+    setTimesPermitedToActiveSpecial(times: number) {
+        this.timesPermitedToActiveSpecial = times
+    }
+
+    checkIfSpecialModeCanBeActived() {
+        return (this.team === 0 && this.y === 8 || this.team === 1 && this.y === 0) 
+        && (this.timesPermitedToActiveSpecial > this.timesActivedSpecial)
     }
 
     getKillPossibilitiesLoop(team: number, { board, cases, xFunc, yFunc }: {
@@ -84,5 +99,7 @@ export default class ChessPiece {
         return { x: killX, y: killY }
     }
 
-    activeSpecialMode(game: ChessGame) {}
+    executeSpecialMode(game: ChessGame) {}
+
+    executeAfterKill(game: ChessGame) {}
 }

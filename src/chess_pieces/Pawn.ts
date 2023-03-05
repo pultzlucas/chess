@@ -1,13 +1,41 @@
 import ChessGame from "../ChessGame.js";
+import { clickOverChessCase } from "../index.js";
 import ChessPiece from "../models/ChessPiece.js";
 import Position from '../models/Position.js'
 
 export default class Pawn extends ChessPiece {
     constructor(x: number, y: number, team: number) {
         super(5, x, y, team)
+        this.setTimesPermitedToActiveSpecial(1)
     }
 
-    activeSpecialMode({ board }: ChessGame) {
+    executeSpecialMode({ board, playerMoving }: ChessGame) {
+        board.addClickEventToCases(null)
+        const graveyard = playerMoving?.graveyard
+
+        graveyard.addClickEventToPieces(e => {
+            const target = e.target as Element
+            let gravePiece = target.classList.contains('piece-case') ? target : target.parentNode as HTMLDivElement
+
+            const piece = graveyard.getPieceById(Number(gravePiece.getAttribute('graveyard_id'))) as ChessPiece
+
+            piece.x = this.x
+            piece.y = this.y
+            
+            board.removePiece(this)
+            board.appendPiece(piece)
+            graveyard.deletePiece(piece.graveyardId as number)
+            
+            graveyard.addClickEventToPieces(null)
+            board.addClickEventToCases(clickOverChessCase)
+
+            // Revive Animation
+            const reviveCase = board.getPieceCaseElement(this.x, this.y)
+            reviveCase.classList.add('revive')
+            setTimeout(() => {
+                reviveCase.classList.remove('revive')
+            }, 1000)
+        })
         
     }
 

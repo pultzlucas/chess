@@ -21,9 +21,7 @@ export function clickOverChessCase(e: Event) {
         if (caseMark.classList.contains('kill')) chessGame.clickOverKillCaseEvent(x, y)
         if (caseMark.classList.contains('move')) chessGame.clickOverMoveCaseEvent(x, y)
     }
-
-    chessGame.board.resetPossibleMoveCases()
-
+    
     const piece = chessGame.board.getPieceFromCaseCordenates(x, y)
     if (piece && chessGame.playerMoving) {
         if (chessGame.playerMoving.team !== piece.team) return

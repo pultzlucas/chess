@@ -11,6 +11,7 @@ import Death from "./chess_pieces/Death.js"
 import ChessPiece from "./models/ChessPiece.js"
 import { CaseMark } from "./models/CaseMark.js"
 import ChessGame from "./ChessGame.js"
+import { clickOverChessCase } from "./index.js"
 
 export default class Board {
     piecesAtBoard: ChessPiece[]
@@ -18,12 +19,13 @@ export default class Board {
     size: number
     boardElement: HTMLDivElement
     pieceCases: PieceCase[][]
+    casesEvent: ((this: HTMLDivElement, ev: MouseEvent) => any) | null
 
     constructor(size: number) {
         this.piecesAtBoard = []
         this.selectedPiece = null
         this.size = size
-
+        this.casesEvent = clickOverChessCase
         this.boardElement = document.querySelector('.chess-board') as HTMLDivElement
         this.boardElement.style.width = `${this.size}px`
         this.boardElement.style.height = `${this.size}px`
@@ -120,6 +122,14 @@ export default class Board {
         } catch (error) {
             return null
         }
+    }
+
+    addClickEventToCases(cb: ((this: HTMLDivElement, ev: MouseEvent) => any) | null) {
+        (document.querySelectorAll('.piece-case') as NodeListOf<HTMLDivElement>).forEach((pieceCase) => {
+            if(this.casesEvent) pieceCase.removeEventListener('click', this.casesEvent)
+            if(cb) pieceCase.addEventListener('click', cb)
+            this.casesEvent = cb
+        })
     }
 
     placePiecesAtInitialPosition() {

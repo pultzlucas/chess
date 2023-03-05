@@ -6,9 +6,10 @@ import Queen from "./Queen.js";
 export default class Bishop extends ChessPiece {
     constructor(x: number, y: number, team: number) {
         super(6, x, y, team)
+        this.setTimesPermitedToActiveSpecial(1)
     }
 
-    activeSpecialMode({ board }: ChessGame) {
+    executeSpecialMode({ board }: ChessGame) {
         const piece = board.getPieceFromCaseCordenates(this.x, this.y)
         if(piece) {
             board.removePiece(piece)

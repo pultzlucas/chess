@@ -104,6 +104,10 @@
     background-color: rgba(211, 108, 108, 0.815);
 }
 
+.revive {
+    background-color: rgba(211, 209, 108, 0.815);
+}
+
 .check {
     background-color: rgba(108, 165, 211, 0.815);
 }

@@ -5,28 +5,33 @@ import Player from "./models/Player.js"
 
 import ChessPiece from "./models/ChessPiece.js"
 import Movement from "./models/Position.js"
+import Graveyard from "./models/Graveyard.js"
+import Pawn from "./chess_pieces/Pawn.js"
+import Archer from "./chess_pieces/Archer.js"
 
 export default class ChessGame {
     rounds: number
     board: Board
     playerB: Player
     playerW: Player
-    playerMoving: Player | null
+    playerMoving: Player
 
     constructor() {
         this.rounds = 0
         this.board = new Board(700)
         this.playerB = new Player(0)
         this.playerW = new Player(1)
-        this.playerMoving = null
+        this.playerMoving = this.playerW
     }
 
     startGame() {
         this.playerMoving = this.playerW
         this.updatePlayerMovingPanel()
         // this.board.placePiecesAtInitialPosition()
-        this.board.appendPiece(new Death(1, 1, 1))
-        this.board.appendPiece(new Lady(6, 6, 0))
+        this.board.appendPiece(new Archer(4, 4, 1))
+        this.board.appendPiece(new Pawn(6, 6, 1))
+        this.board.appendPiece(new Pawn(2, 0, 0))
+        this.board.appendPiece(new Pawn(6, 1, 0))
     }
 
     updatePlayerMovingPanel() {
@@ -35,8 +40,7 @@ export default class ChessGame {
     }
 
     changePlayerMoving() {
-        if (this.playerMoving)
-            this.playerMoving = this.playerMoving.team === 0 ? this.playerW : this.playerB
+        if (this.playerMoving) this.playerMoving = this.playerMoving.team === 0 ? this.playerW : this.playerB
         this.updatePlayerMovingPanel()
     }
 
@@ -59,24 +63,27 @@ export default class ChessGame {
             .map((piece: ChessPiece) => piece.getKillPossibilities(this))
             .flat()
             .filter((mv: Movement) => {
-                    const enemyKing = this.board.piecesAtBoard.find(({ id, team }: ChessPiece) => {
-                        if(this.playerMoving)
+                const enemyKing = this.board.piecesAtBoard.find(({ id, team }: ChessPiece) => {
+                    if (this.playerMoving)
                         return id === 0 && team !== this.playerMoving.team
-                    })
-                    if (enemyKing) return mv.x === enemyKing.x && mv.y === enemyKing.y
+                })
+                if (enemyKing) return mv.x === enemyKing.x && mv.y === enemyKing.y
             }).length === 2
     }
 
     clickOverKillCaseEvent(x: number, y: number) {
+        this.board.resetPossibleMoveCases()
         const pieceToKill = this.board.getPieceFromCaseCordenates(x, y)
         if (this.playerMoving)
             if (pieceToKill && pieceToKill.team !== this.playerMoving.selectedPiece?.team) {
                 this.playerMoving.killEnemyPiece(this.board, pieceToKill)
+                this.playerMoving.selectedPiece?.executeAfterKill(this)
                 this.changePlayerMoving()
             }
     }
-
+    
     clickOverMoveCaseEvent(x: number, y: number) {
+        this.board.resetPossibleMoveCases()
         if (this.playerMoving) {
             const pieceMoving = this.playerMoving.selectedPiece as ChessPiece
             this.playerMoving.moveSelectedPieceTo(this.board, x, y)
@@ -88,10 +95,10 @@ export default class ChessGame {
                 return
             }
 
-            // Verify if piece arrive the board edge
-            if (pieceMoving.team === 0 && pieceMoving.y === 8 || pieceMoving.team === 1 && pieceMoving.y === 0) {
+            if (pieceMoving.checkIfSpecialModeCanBeActived()) {
                 pieceMoving.specialModeIsActived = true
-                pieceMoving.activeSpecialMode(this)
+                pieceMoving.executeSpecialMode(this)
+                pieceMoving.timesActivedSpecial++
             }
         }
 
