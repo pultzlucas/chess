@@ -8,7 +8,7 @@ document.querySelectorAll('.piece-case').forEach(pieceCase => {
     pieceCase.addEventListener('click', clickOverChessCase)
 })
 
-console.log(location.href)
+console.log(location.hostname)
 
 export function clickOverChessCase(e: Event) {
     const target = e.target as Element

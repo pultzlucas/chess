@@ -102,7 +102,8 @@ export default class Board {
         const pieceCaseEl = this.getPieceCaseElement(piece.x, piece.y)
         const img = document.createElement('img')
         img.classList.add('piece-img')
-        img.src = `/assets/${piece.id}-${piece.team}.png`
+        console.log(`${location.href}/assets/${piece.id}-${piece.team}.png`)
+        img.src = `${location.href}/assets/${piece.id}-${piece.team}.png`
         pieceCaseEl.appendChild(img)
     }
 
