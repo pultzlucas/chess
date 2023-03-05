@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages",
     "build": "tsc"
   },
   "dependencies": {
