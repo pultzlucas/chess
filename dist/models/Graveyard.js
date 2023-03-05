@@ -28,7 +28,7 @@ export default class Graveyard {
         deadPiece.classList.add('dead-piece');
         deadPiece.setAttribute('graveyard_id', String(this.pieces.length - 1));
         const pieceImg = document.createElement('img');
-        pieceImg.src = `../assets/${piece.id}-${piece.team}.png`;
+        pieceImg.src = `${location.hostname}/assets/${piece.id}-${piece.team}.png`;
         deadPiece.appendChild(pieceImg);
         this.graveyardElement.appendChild(deadPiece);
     }
