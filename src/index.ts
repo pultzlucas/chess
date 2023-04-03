@@ -1,14 +1,7 @@
 import ChessGame from "./ChessGame.js"
 
-const chessGame = new ChessGame()
-chessGame.board.render()
-chessGame.startGame()
-
-document.querySelectorAll('.piece-case').forEach(pieceCase => {
-    pieceCase.addEventListener('click', clickOverChessCase)
-})
-
-console.log(location.hostname)
+const game = new ChessGame()
+game.startGame()
 
 export function clickOverChessCase(e: Event) {
     const target = e.target as Element
@@ -17,17 +10,25 @@ export function clickOverChessCase(e: Event) {
     const caseMark = caseElement.lastChild as Element
     const x = Number(caseElement.getAttribute('x'))
     const y = Number(caseElement.getAttribute('y'))
-
+    
+    game.board.resetMarks()
+    
     if (caseMark) {
         if (caseMark.classList.contains('blocked')) return
-        if (caseMark.classList.contains('kill')) chessGame.clickOverKillCaseEvent(x, y)
-        if (caseMark.classList.contains('move')) chessGame.clickOverMoveCaseEvent(x, y)
+        if (caseMark.classList.contains('kill')) {
+            game.boardEvent.clickOverKillCaseEvent(x, y)
+            return
+        }
+        if (caseMark.classList.contains('move')) {
+            game.boardEvent.clickOverMoveCaseEvent(x, y)
+            return
+        }
     }
-    
-    const piece = chessGame.board.getPieceFromCaseCordenates(x, y)
-    if (piece && chessGame.playerMoving) {
-        if (chessGame.playerMoving.team !== piece.team) return
-        chessGame.playerMoving.selectPiece(piece)
-        chessGame.board.showPossibleMoveCases(chessGame, piece)
+
+    const piece = game.board.getPieceFromCaseCordenates(x, y)
+    if (piece) {
+        if (game.playerMoving.team !== piece.team) return
+        game.playerMoving.selectPiece(piece)
+        game.board.showPossiblePlays(game, piece)
     }
 }

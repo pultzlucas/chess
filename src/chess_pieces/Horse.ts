@@ -2,7 +2,7 @@ import ChessGame from "../ChessGame.js";
 import ChessPiece from "../models/ChessPiece.js";
 
 export default class Horse extends ChessPiece {
-    constructor(x: number, y: number, team: number) {
+    constructor(x: number, y: number, team: string) {
         super(3, x, y, team)
     }
 

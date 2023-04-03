@@ -43,15 +43,16 @@
     height: var(--board-size);
     width: calc(var(--case-size) * 2);
     display: flex;
-    flex-direction: column-reverse;
 }
 
 .graveyard-black {
     flex-wrap: wrap-reverse;
+    flex-direction: column;
 }
 
 .graveyard-white {
     flex-wrap: wrap;
+    flex-direction: column-reverse;
 }
 
 .graveyard .dead-piece {

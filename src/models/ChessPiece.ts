@@ -13,7 +13,7 @@ import ChessGame from "../ChessGame.js"
 import Position from "../models/Position.js"
 
 export default class ChessPiece {
-    team: number
+    team: string
     id: number
     x: number
     y: number
@@ -24,7 +24,7 @@ export default class ChessPiece {
     timesPermitedToActiveSpecial: number
     graveyardId: number | null
 
-    constructor(id: number, x: number, y: number, team: number) {
+    constructor(id: number, x: number, y: number, team: string) {
         this.id = id
         this.team = team
         this.x = x
@@ -42,11 +42,11 @@ export default class ChessPiece {
     }
 
     checkIfSpecialModeCanBeActived() {
-        return (this.team === 0 && this.y === 8 || this.team === 1 && this.y === 0) 
+        return (this.team === 'black' && this.y === 7 || this.team === 'white' && this.y === 0) 
         && (this.timesPermitedToActiveSpecial > this.timesActivedSpecial)
     }
 
-    getKillPossibilitiesLoop(team: number, { board, cases, xFunc, yFunc }: {
+    getKillPossibilitiesLoop(team: string, { board, cases, xFunc, yFunc }: {
         board: Board
         cases: number,
         xFunc: Function
@@ -66,7 +66,7 @@ export default class ChessPiece {
         }
     }
 
-    getMovementPossibilitiesLoop(team: number, { board, cases, xFunc, yFunc }: {
+    getMovementPossibilitiesLoop(team: string, { board, cases, xFunc, yFunc }: {
         board: Board
         cases: number,
         xFunc: Function
@@ -99,7 +99,7 @@ export default class ChessPiece {
         return { x: killX, y: killY }
     }
 
-    executeSpecialMode(game: ChessGame) {}
+    executeSpecialMode(game: ChessGame){}
 
     executeAfterKill(game: ChessGame) {}
 }

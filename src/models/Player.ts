@@ -1,14 +1,15 @@
 import Board from "../Board.js"
+import ChessGame from "../ChessGame"
 import ChessPiece from "./ChessPiece.js"
 import Graveyard from "./Graveyard.js"
 
 export default class Player {
-    team: number
+    team: string
     moves: number
     selectedPiece: ChessPiece | null
     graveyard: Graveyard
 
-    constructor(team: number) {
+    constructor(team: string) {
         this.team = team
         this.moves = 0
         this.selectedPiece = null
@@ -16,7 +17,7 @@ export default class Player {
     }
 
     getName(): string {
-        return this.team === 0 ? 'black' : 'white'
+        return this.team
     }
 
     selectPiece(piece: ChessPiece) {
@@ -24,17 +25,18 @@ export default class Player {
     }
 
     killEnemyPiece(board: Board, { x, y }: ChessPiece) {
-        const pieceToKill = board.getPieceFromCaseCordenates(x, y) as ChessPiece
-        this.graveyard.appendPiece(pieceToKill)
-        if(this.selectedPiece) {
+        const pieceToKill = board.getPieceFromCaseCordenates(x, y)
+        if (pieceToKill && this.selectedPiece) {
+            this.graveyard.appendPiece(pieceToKill)
             const positionAfterKill = this.selectedPiece.getPositionAfterKill(this.selectedPiece, x, y)
             board.removePiece(pieceToKill)
             this.moveSelectedPieceTo(board, positionAfterKill.x, positionAfterKill.y)
         }
+
     }
 
     moveSelectedPieceTo(board: Board, x: number, y: number) {
-        if(this.selectedPiece) {
+        if (this.selectedPiece) {
             board.removePiece(this.selectedPiece)
             this.selectedPiece.x = x
             this.selectedPiece.y = y

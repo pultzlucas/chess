@@ -5,7 +5,7 @@ import Movement from "../models/Position.js";
 export default class Archer extends ChessPiece {
     private lastRoundAttacked: number | null
 
-    constructor(x: number, y: number, team: number) {
+    constructor(x: number, y: number, team: string) {
         super(7, x, y, team)
         this.lastRoundAttacked = null
     }
@@ -17,10 +17,10 @@ export default class Archer extends ChessPiece {
         }
 
         return [
-            { x: this.x + 2, y: this.team === 0 ? this.y + 3 : this.y - 3 }, // right
-            { x: this.x - 2, y: this.team === 0 ? this.y + 3 : this.y - 3 }, // left
+            { x: this.x + 2, y: this.team === 'black' ? this.y + 3 : this.y - 3 }, // right
+            { x: this.x - 2, y: this.team === 'black' ? this.y + 3 : this.y - 3 }, // left
         ].filter(({ x, y }) => {
-            if (board.getPieceFromCaseCordenates(this.x, this.team === 0 ? this.y + 1 : this.y - 1)) return false
+            if (board.getPieceFromCaseCordenates(this.x, this.team === 'black' ? this.y + 1 : this.y - 1)) return false
             const otherPiece = board.getPieceFromCaseCordenates(x, y)
             if (otherPiece && this.team !== otherPiece.team) return true
             return !otherPiece

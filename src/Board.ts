@@ -11,21 +11,20 @@ import Death from "./chess_pieces/Death.js"
 import ChessPiece from "./models/ChessPiece.js"
 import { CaseMark } from "./models/CaseMark.js"
 import ChessGame from "./ChessGame.js"
-import { clickOverChessCase } from "./index.js"
+import BoardEventController from "./models/BoardEventController"
 
 export default class Board {
-    piecesAtBoard: ChessPiece[]
     selectedPiece: ChessPiece | null
-    size: number
-    boardElement: HTMLDivElement
     pieceCases: PieceCase[][]
-    casesEvent: ((this: HTMLDivElement, ev: MouseEvent) => any) | null
+    size: number
+    piecesAtBoard: ChessPiece[]
 
+    protected boardElement: HTMLDivElement
+    
     constructor(size: number) {
         this.piecesAtBoard = []
         this.selectedPiece = null
         this.size = size
-        this.casesEvent = clickOverChessCase
         this.boardElement = document.querySelector('.chess-board') as HTMLDivElement
         this.boardElement.style.width = `${this.size}px`
         this.boardElement.style.height = `${this.size}px`
@@ -34,7 +33,7 @@ export default class Board {
                 const arr: null[] = new Array(8)
                 return arr.fill(null).map((_, x) => {
                     let pieceCaseType = 0
-                    if (x % 2 === 0 && y % 2 == 0) pieceCaseType = 1
+                    if (x % 2 === 0 && y % 2 === 0) pieceCaseType = 1
                     if (x % 2 !== 0 && y % 2 !== 0) pieceCaseType = 1
                     return new PieceCase(x, y, pieceCaseType)
                 })
@@ -75,11 +74,11 @@ export default class Board {
         }
     }
 
-    resetPossibleMoveCases() {
+    resetMarks() {
         this.boardElement.querySelectorAll('.piece-case-mark').forEach(mark => mark.remove())
     }
 
-    showPossibleMoveCases(gameState: ChessGame, piece: ChessPiece) {
+    showPossiblePlays(gameState: ChessGame, piece: ChessPiece) {
         piece.getMovementPossibilities(gameState).forEach(pos => {
             this.addMarkToPositionCase(pos as PieceCase, CaseMark.Move)
         })
@@ -102,8 +101,7 @@ export default class Board {
         const pieceCaseEl = this.getPieceCaseElement(piece.x, piece.y)
         const img = document.createElement('img')
         img.classList.add('piece-img')
-        console.log(`${location.href}/assets/${piece.id}-${piece.team}.png`)
-        img.src = `${location.href}/assets/${piece.id}-${piece.team}.png`
+        img.src = `${location.href}/assets/${piece.id}-${piece.team === 'black' ? 0 : 1}.png`
         pieceCaseEl.appendChild(img)
     }
 
@@ -125,50 +123,42 @@ export default class Board {
         }
     }
 
-    addClickEventToCases(cb: ((this: HTMLDivElement, ev: MouseEvent) => any) | null) {
-        (document.querySelectorAll('.piece-case') as NodeListOf<HTMLDivElement>).forEach((pieceCase) => {
-            if(this.casesEvent) pieceCase.removeEventListener('click', this.casesEvent)
-            if(cb) pieceCase.addEventListener('click', cb)
-            this.casesEvent = cb
-        })
-    }
-
     placePiecesAtInitialPosition() {
         [
             // Black team
-            new Pawn(0, 1, 0),
-            new Pawn(1, 1, 0),
-            new Lady(2, 1, 0),
-            new Pawn(3, 1, 0),
-            new Archer(4, 1, 0),
-            new Lady(5, 1, 0),
-            new Death(6, 1, 0),
-            new Pawn(7, 1, 0),
-            new Rook(0, 0, 0),
-            new Rook(7, 0, 0),
-            new Bishop(2, 0, 0),
-            new Bishop(5, 0, 0),
-            new Horse(1, 0, 0),
-            new Horse(6, 0, 0),
-            new King(3, 0, 0),
-            new Queen(4, 0, 0),
+            new Pawn(0, 1, 'black'),
+            new Pawn(1, 1, 'black'),
+            new Lady(2, 1, 'black'),
+            new Pawn(3, 1, 'black'),
+            new Archer(4, 1, 'black'),
+            new Lady(5, 1, 'black'),
+            new Death(6, 1, 'black'),
+            new Pawn(7, 1, 'black'),
+            new Rook(0, 0, 'black'),
+            new Rook(7, 0, 'black'),
+            new Bishop(2, 0, 'black'),
+            new Bishop(5, 0, 'black'),
+            new Horse(1, 0, 'black'),
+            new Horse(6, 0, 'black'),
+            new King(3, 0, 'black'),
+            new Queen(4, 0, 'black'),
             // White team
-            new Pawn(0, 6, 1),
-            new Pawn(1, 6, 1),
-            new Lady(2, 6, 1),
-            new Pawn(3, 6, 1),
-            new Archer(4, 6, 1),
-            new Lady(5, 6, 1),
-            new Death(6, 6, 1),
-            new Pawn(7, 6, 1),
-            new Rook(0, 7, 1),
-            new Rook(7, 7, 1),
-            new Bishop(2, 7, 1),
-            new Bishop(5, 7, 1),
-            new Horse(1, 7, 1),
-            new Horse(6, 7, 1),
-            new King(4, 7, 1),
-            new Queen(3, 7, 1)
+            new Pawn(0, 6, 'white'),
+            new Pawn(1, 6, 'white'),
+            new Lady(2, 6, 'white'),
+            new Pawn(3, 6, 'white'),
+            new Archer(4, 6, 'white'),
+            new Lady(5, 6, 'white'),
+            new Death(6, 6, 'white'),
+            new Pawn(7, 6, 'white'),
+            new Rook(0, 7, 'white'),
+            new Rook(7, 7, 'white'),
+            new Bishop(2, 7, 'white'),
+            new Bishop(5, 7, 'white'),
+            new Horse(1, 7, 'white'),
+            new Horse(6, 7, 'white'),
+            new King(4, 7, 'white'),
+            new Queen(3, 7, 'white')
         ]
             .forEach(piece => this.appendPiece(piece))
     }

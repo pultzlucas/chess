@@ -3,7 +3,7 @@ import ChessPiece from "../models/ChessPiece.js";
 import Movement from "../models/Position";
 
 export default class Bishop extends ChessPiece {
-    constructor(x: number, y: number, team: number) {
+    constructor(x: number, y: number, team: string) {
         super(2, x, y, team)
     }
 

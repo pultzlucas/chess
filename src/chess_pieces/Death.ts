@@ -1,49 +1,43 @@
 import ChessPiece from "../models/ChessPiece.js";
 import ChessGame from "../ChessGame.js";
-import { clickOverChessCase } from "../index.js";
 import PieceCase from "../models/PieceCase.js";
 import { CaseMark } from "../models/CaseMark.js";
 import Position from "../models/Position.js";
 
 export default class Death extends ChessPiece {
-    constructor(x: number, y: number, team: number) {
+    constructor(x: number, y: number, team: string) {
         super(8, x, y, team)
         this.setTimesPermitedToActiveSpecial(1)
     }
 
-    executeSpecialMode({ board, playerMoving }: ChessGame) {
-        alert('Escolha uma peça para a morte levar')
+    executeSpecialMode(gameState: ChessGame) {
+        gameState.board.piecesAtBoard
+            .filter(({ team }) => team !== gameState.playerMoving?.team)
+            .map(({ x, y }) => gameState.board.getPieceCaseElement(x, y))
+            .forEach(caseElement => gameState.board.addMarkToPositionCase({
+                x: Number(caseElement.getAttribute('x')),
+                y: Number(caseElement.getAttribute('y'))
+            } as PieceCase, CaseMark.Kill))
 
-        board.piecesAtBoard
-            .filter(({ team }) => team !== playerMoving?.team)
-            .map(({ x, y }) => board.getPieceCaseElement(x, y))
-            .filter(caseElement => this.x !== Number(caseElement.getAttribute('x')) && this.y !== Number(caseElement.getAttribute('y')))
-            .forEach(caseElement => {
-                board.addMarkToPositionCase({
-                    x: Number(caseElement.getAttribute('x')),
-                    y: Number(caseElement.getAttribute('y'))
-                } as PieceCase, CaseMark.Kill)
-            })
-            
-        board.addClickEventToCases(killEnemyPiece)
-
-        function killEnemyPiece(e: Event) {
+        gameState.boardEvent.addClickEventToCases('new', e => {
             const target = e.target as Element
             let caseElement = target.classList.contains('piece-case') ? target : target.parentNode as Element
 
-            playerMoving?.killEnemyPiece(board, {
-                x: Number(caseElement.getAttribute('x')),
-                y: Number(caseElement.getAttribute('y')),
-            } as ChessPiece)
+            const caseMark = caseElement.lastChild as Element
+            const x = Number(caseElement.getAttribute('x'))
+            const y = Number(caseElement.getAttribute('y'))
 
-            board.resetPossibleMoveCases()
-            board.addClickEventToCases(clickOverChessCase)
-        }
+            if (caseMark && caseMark.classList.contains('kill')) {
+                gameState.boardEvent.clickOverKillCaseEvent(x, y)
+                gameState.board.resetMarks()
+                gameState.boardEvent.addClickEventToCases('reset')
+            }
+        })
     }
 
     getPositionAfterKill(piece: ChessPiece, killX: number, killY: number): Position {
-        if(this.specialModeIsActived) return {x: this.x, y: this.y}
-        return { x: killX, y: killY }    
+        if (this.specialModeIsActived) return { x: this.x, y: this.y }
+        return { x: killX, y: killY }
     }
 
     getKillPossibilities({ board }: ChessGame) {

@@ -3,7 +3,7 @@ import ChessPiece from "../models/ChessPiece.js";
 import Position from "../models/Position.js"
 
 export default class Queen extends ChessPiece {
-    constructor(x: number, y: number, team: number) {
+    constructor(x: number, y: number, team: string) {
         super(1, x, y, team)
     }
 
